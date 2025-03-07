@@ -13,9 +13,14 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SESSION_SECRET', 'your-secret-key')
+# Ensure secret key is set
+app.secret_key = os.environ.get('SESSION_SECRET')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+}
 
 # Initialize extensions
 csrf = CSRFProtect()
@@ -27,7 +32,11 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    try:
+        return User.query.get(int(id))
+    except Exception as e:
+        logger.error(f"Error loading user: {str(e)}")
+        return None
 
 # Load the trained model
 try:
@@ -75,12 +84,17 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('index'))
-
-        flash('Invalid username or password')
+        try:
+            user = User.query.filter_by(username=form.username.data).first()
+            if user and user.check_password(form.password.data):
+                login_user(user)
+                logger.info(f"User {user.username} logged in successfully")
+                return redirect(url_for('index'))
+            else:
+                flash('Invalid username or password')
+        except Exception as e:
+            logger.error(f"Login error: {str(e)}")
+            flash('An error occurred during login')
 
     return render_template('login.html', form=form)
 
