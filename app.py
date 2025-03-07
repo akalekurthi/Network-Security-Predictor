@@ -26,18 +26,18 @@ def index():
 def predict():
     try:
         # Get input values from form
-        input_values = [float(x) for x in request.form.values()]
-        
+        input_values = [float(request.form[f'input_{i}']) for i in range(1, 20)]
+
         # Validate input
         if not validate_input(input_values):
             return render_template('error.html', error="Invalid input values provided")
-            
+
         # Preprocess input
         processed_input = preprocess_input(input_values)
-        
+
         # Make prediction
         prediction = model.predict(processed_input)
-        
+
         # Map prediction to attack type
         attack_types = {
             0: 'DDoS Attack',
@@ -46,14 +46,18 @@ def predict():
             3: 'U2R Attack',
             4: 'Normal Traffic'
         }
-        
+
         result = attack_types.get(prediction[0], 'Unknown Attack Type')
-        
+
+        # Get prediction probability
+        probabilities = model.predict_proba(processed_input)[0]
+        confidence = float(max(probabilities))
+
         return render_template('prediction.html', 
                              prediction=result,
-                             confidence=0.92, # Mock confidence for demo
+                             confidence=confidence,
                              input_data=input_values)
-                             
+
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}")
         return render_template('error.html', 
