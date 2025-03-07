@@ -8,7 +8,7 @@
                 <h2 class="card-title text-center mb-4">Network Intrusion Detection</h2>
 
                 <form id="detection-form" action="{{ url_for('predict') }}" method="post">
-                    {{ csrf_token() }}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                     <div class="row g-3">
                         <!-- Basic Features -->
                         <div class="col-md-4">
@@ -148,26 +148,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Attack Distribution</h5>
-                        <canvas id="attackChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Traffic Analysis</h5>
-                        <canvas id="trafficChart"></canvas>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

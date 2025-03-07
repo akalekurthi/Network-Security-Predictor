@@ -99,14 +99,49 @@ def index():
 @login_required
 def predict():
     try:
-        input_values = [float(request.form[f'input_{i}']) for i in range(1, 20)]
+        # Log incoming request data
+        logger.debug(f"Form data: {request.form}")
 
+        # Get input values
+        input_values = []
+        for i in range(1, 20):
+            key = f'input_{i}'
+            if key not in request.form:
+                logger.error(f"Missing input field: {key}")
+                return render_template('error.html', error=f"Missing input field: {key}")
+            try:
+                value = float(request.form[key])
+                input_values.append(value)
+            except ValueError as e:
+                logger.error(f"Invalid value for {key}: {request.form[key]}")
+                return render_template('error.html', error=f"Invalid value for input {i}")
+
+        # Validate input
         if not validate_input(input_values):
+            logger.error("Input validation failed")
             return render_template('error.html', error="Invalid input values provided")
 
-        processed_input = preprocess_input(input_values)
-        prediction = model.predict(processed_input)
-        probabilities = model.predict_proba(processed_input)[0].tolist()
+        # Check if model is loaded
+        if model is None:
+            logger.error("Model not loaded")
+            return render_template('error.html', error="Model not available")
+
+        # Preprocess input
+        try:
+            processed_input = preprocess_input(input_values)
+            logger.debug(f"Processed input: {processed_input}")
+        except Exception as e:
+            logger.error(f"Error preprocessing input: {str(e)}")
+            return render_template('error.html', error="Error preprocessing input")
+
+        # Make prediction
+        try:
+            prediction = model.predict(processed_input)
+            probabilities = model.predict_proba(processed_input)[0].tolist()
+            logger.debug(f"Prediction: {prediction}, Probabilities: {probabilities}")
+        except Exception as e:
+            logger.error(f"Prediction error: {str(e)}")
+            return render_template('error.html', error="Error making prediction")
 
         attack_types = {
             0: 'DDoS Attack',
@@ -126,9 +161,9 @@ def predict():
                              input_data=input_values)
 
     except Exception as e:
-        logger.error(f"Prediction error: {str(e)}")
+        logger.error(f"Unexpected error in prediction: {str(e)}")
         return render_template('error.html', 
-                             error="An error occurred during prediction")
+                             error="An unexpected error occurred during prediction")
 
 # Create tables
 with app.app_context():
