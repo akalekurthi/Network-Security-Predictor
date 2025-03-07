@@ -6,47 +6,158 @@
         <div class="card result-card">
             <div class="card-body">
                 <h3 class="card-title text-center mb-4">Analysis Results</h3>
-                
+
                 <div class="result-animation">
-                    <div class="result-icon">
+                    <div class="result-icon text-center mb-4">
                         {% if prediction == 'Normal Traffic' %}
-                            <i class="fas fa-check-circle text-success"></i>
+                            <i class="fas fa-check-circle text-success fa-4x"></i>
                         {% else %}
-                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                            <i class="fas fa-exclamation-triangle text-danger fa-4x"></i>
                         {% endif %}
                     </div>
-                    
+
                     <div class="result-details">
-                        <h4 class="mb-3">{{ prediction }}</h4>
-                        <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" 
+                        <h4 class="text-center mb-3">{{ prediction }}</h4>
+                        <div class="progress mb-4">
+                            <div class="progress-bar {% if prediction != 'Normal Traffic' %}bg-danger{% endif %}" 
+                                 role="progressbar" 
                                  style="width: {{ confidence * 100 }}%">
                                 {{ (confidence * 100)|round(2) }}% Confidence
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="additional-info mt-4">
-                    <h5>Details:</h5>
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <strong>Protocol Type:</strong> {{ input_data[0] }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Service:</strong> {{ input_data[1] }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Flag:</strong> {{ input_data[2] }}
-                        </li>
-                    </ul>
+
+                <!-- Classification Metrics -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Attack Distribution</h5>
+                                <canvas id="attackDistribution"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Confidence Scores</h5>
+                                <canvas id="confidenceScores"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
+
+                <div class="additional-info mt-4">
+                    <h5>Input Features:</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Protocol Type</td>
+                                    <td>{{ input_data[0] }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Service</td>
+                                    <td>{{ input_data[1] }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Flag</td>
+                                    <td>{{ input_data[2] }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Source Bytes</td>
+                                    <td>{{ input_data[3] }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Destination Bytes</td>
+                                    <td>{{ input_data[4] }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="text-center mt-4">
-                    <a href="/" class="btn btn-primary">Analyze New Traffic</a>
+                    <a href="/" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search me-2"></i>Analyze New Traffic
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Attack Distribution Chart
+    new Chart(document.getElementById('attackDistribution'), {
+        type: 'doughnut',
+        data: {
+            labels: ['DDoS', 'Probe', 'R2L', 'U2R', 'Normal'],
+            datasets: [{
+                data: {{ probabilities|tojson }},
+                backgroundColor: [
+                    '#dc3545',  // red for DDoS
+                    '#fd7e14',  // orange for Probe
+                    '#ffc107',  // yellow for R2L
+                    '#6f42c1',  // purple for U2R
+                    '#28a745'   // green for Normal
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            animation: {
+                animateScale: true,
+                animateRotate: true
+            }
+        }
+    });
+
+    // Confidence Scores Bar Chart
+    new Chart(document.getElementById('confidenceScores'), {
+        type: 'bar',
+        data: {
+            labels: ['DDoS', 'Probe', 'R2L', 'U2R', 'Normal'],
+            datasets: [{
+                label: 'Confidence Score',
+                data: {{ probabilities|tojson }},
+                backgroundColor: [
+                    '#dc3545',
+                    '#fd7e14',
+                    '#ffc107',
+                    '#6f42c1',
+                    '#28a745'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

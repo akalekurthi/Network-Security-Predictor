@@ -106,6 +106,7 @@ def predict():
 
         processed_input = preprocess_input(input_values)
         prediction = model.predict(processed_input)
+        probabilities = model.predict_proba(processed_input)[0].tolist()
 
         attack_types = {
             0: 'DDoS Attack',
@@ -116,12 +117,12 @@ def predict():
         }
 
         result = attack_types.get(prediction[0], 'Unknown Attack Type')
-        probabilities = model.predict_proba(processed_input)[0]
         confidence = float(max(probabilities))
 
         return render_template('prediction.html', 
                              prediction=result,
                              confidence=confidence,
+                             probabilities=probabilities,
                              input_data=input_values)
 
     except Exception as e:
