@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card result-card">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Analysis Results</h3>
+                
+                <div class="result-animation">
+                    <div class="result-icon">
+                        {% if prediction == 'Normal Traffic' %}
+                            <i class="fas fa-check-circle text-success"></i>
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle text-danger"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="result-details">
+                        <h4 class="mb-3">{{ prediction }}</h4>
+                        <div class="progress mb-3">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: {{ confidence * 100 }}%">
+                                {{ (confidence * 100)|round(2) }}% Confidence
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="additional-info mt-4">
+                    <h5>Details:</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Protocol Type:</strong> {{ input_data[0] }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Service:</strong> {{ input_data[1] }}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Flag:</strong> {{ input_data[2] }}
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-primary">Analyze New Traffic</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

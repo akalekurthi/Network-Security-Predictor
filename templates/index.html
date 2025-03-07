@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card main-card">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Network Intrusion Detection</h2>
+                
+                <form id="detection-form" action="{{ url_for('predict') }}" method="post">
+                    <div class="row g-3">
+                        <!-- Input fields based on the model features -->
+                        <div class="col-md-4">
+                            <label class="form-label">Protocol Type</label>
+                            <input type="number" class="form-control" name="protocol_type" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label">Service</label>
+                            <input type="number" class="form-control" name="service" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label">Flag</label>
+                            <input type="number" class="form-control" name="flag" required>
+                        </div>
+                        
+                        <!-- Add remaining input fields -->
+                        <!-- Using sample.txt format as reference -->
+                        
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="analyze-btn">
+                                <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                                Analyze Traffic
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Attack Distribution</h5>
+                        <canvas id="attackChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Traffic Analysis</h5>
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
