@@ -89,65 +89,32 @@
 
                 <div class="additional-info mt-4">
                     <h5>Input Features:</h5>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Feature</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Protocol Type</td>
-                                    <td>{{ input_data[0] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Service</td>
-                                    <td>{{ input_data[1] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Flag</td>
-                                    <td>{{ input_data[2] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Source Bytes</td>
-                                    <td>{{ input_data[3] }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Destination Bytes</td>
-                                    <td>{{ input_data[4] }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <a href="/" class="btn btn-primary btn-lg">
-                        <i class="fas fa-search me-2"></i>Analyze New Traffic
-                    </a>
+                    <pre class="code-block">{{ input_data }}</pre>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Attack Distribution Chart
+    const attackTypes = ['DDoS', 'Probe', 'R2L', 'U2R', 'Normal'];
+    const probabilities = {{ probabilities|tojson }};
+
     new Chart(document.getElementById('attackDistribution'), {
-        type: 'doughnut',
+        type: 'pie',
         data: {
-            labels: ['DDoS', 'Probe', 'R2L', 'U2R', 'Normal'],
+            labels: attackTypes,
             datasets: [{
-                data: {{ probabilities|tojson }},
+                data: probabilities.map(val => (val * 100).toFixed(2)),
                 backgroundColor: [
-                    '#dc3545',  // red for DDoS
-                    '#fd7e14',  // orange for Probe
-                    '#ffc107',  // yellow for R2L
-                    '#6f42c1',  // purple for U2R
-                    '#28a745'   // green for Normal
+                    '#dc3545', // Red for DDoS
+                    '#fd7e14', // Orange for Probe
+                    '#ffc107', // Yellow for R2L
+                    '#6f42c1', // Purple for U2R
+                    '#28a745'  // Green for Normal
                 ]
             }]
         },
@@ -155,30 +122,33 @@ document.addEventListener('DOMContentLoaded', function() {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw}%`;
+                        }
+                    }
                 }
-            },
-            animation: {
-                animateScale: true,
-                animateRotate: true
             }
         }
     });
 
-    // Confidence Scores Bar Chart
+    // Confidence Score Chart
     new Chart(document.getElementById('confidenceScores'), {
         type: 'bar',
         data: {
-            labels: ['DDoS', 'Probe', 'R2L', 'U2R', 'Normal'],
+            labels: attackTypes,
             datasets: [{
-                label: 'Confidence Score',
-                data: {{ probabilities|tojson }},
+                label: 'Confidence (%)',
+                data: probabilities.map(val => (val * 100).toFixed(2)),
                 backgroundColor: [
-                    '#dc3545',
-                    '#fd7e14',
-                    '#ffc107',
-                    '#6f42c1',
-                    '#28a745'
+                    '#dc3545', // Red for DDoS
+                    '#fd7e14', // Orange for Probe
+                    '#ffc107', // Yellow for R2L
+                    '#6f42c1', // Purple for U2R
+                    '#28a745'  // Green for Normal
                 ]
             }]
         },
@@ -187,15 +157,20 @@ document.addEventListener('DOMContentLoaded', function() {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 1.0
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
         }
     });
-    
+
     // Performance Metrics Charts
     const performanceMetrics = {{ performance_metrics|tojson }};
-    
+
     // Accuracy Chart
     new Chart(document.getElementById('accuracyChart'), {
         type: 'bar',
@@ -218,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // F1 Score Chart
     new Chart(document.getElementById('f1Chart'), {
         type: 'bar',
@@ -241,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Precision Chart
     new Chart(document.getElementById('precisionChart'), {
         type: 'bar',
@@ -264,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Recall Chart
     new Chart(document.getElementById('recallChart'), {
         type: 'bar',
@@ -283,20 +258,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 y: {
                     beginAtZero: true,
                     max: 1.0
-                }
-            }
-        }
-    });s: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 1
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
                 }
             }
         }

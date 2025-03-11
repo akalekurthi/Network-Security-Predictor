@@ -36,8 +36,9 @@ def get_performance_metrics():
     """
     # Example metrics - in a real application, these would be calculated based on model evaluation
     return {
-        'accuracy': 0.95,
-        'precision': 0.94,
-        'recall': 0.92,
-        'f1_score': 0.93
+        'accuracy': [0.95],
+        'precision': [0.94],
+        'recall': [0.92],
+        'f1_score': [0.93],
+        'classifiers': ['Random Forest']  # Add the classifier name for chart labels
     }
