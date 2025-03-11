@@ -86,6 +86,10 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         try:
+            # Simulate a slight delay to show loading animation
+            import time
+            time.sleep(0.5)
+            
             user = User.query.filter_by(username=form.username.data).first()
             if user and user.check_password(form.password.data):
                 login_user(user)
@@ -93,11 +97,12 @@ def login():
                 return redirect(url_for('index'))
             else:
                 flash('Invalid username or password')
+                logger.warning(f"Failed login attempt for username: {form.username.data}")
         except Exception as e:
             logger.error(f"Login error: {str(e)}")
             flash('An error occurred during login')
 
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, page_id="login")
 
 @app.route('/logout')
 @login_required

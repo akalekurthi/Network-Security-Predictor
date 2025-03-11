@@ -1,51 +1,185 @@
+
 {% extends "base.html" %}
 
 {% block content %}
 <div class="row">
     <div class="col-lg-6 mx-auto">
-        <div class="card auth-card">
+        <div class="card auth-card animate-card">
             <div class="card-body">
                 <div class="text-center mb-4">
-                    <i class="fas fa-shield-alt auth-icon"></i>
+                    <i class="fas fa-shield-alt auth-icon animate-icon"></i>
                     <h3 class="card-title">Login</h3>
                 </div>
 
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-danger">{{ message }}</div>
+                            <div class="alert alert-danger animate-alert">{{ message }}</div>
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
 
-                <form method="POST" class="login-form">
+                <form method="POST" class="login-form" id="login-form">
                     {{ form.hidden_tag() }}
-                    <div class="mb-3">
+                    <div class="mb-3 animate-form-field">
                         <label class="form-label">Username</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            {{ form.username(class="form-control") }}
+                            {{ form.username(class="form-control", id="username") }}
                         </div>
+                        <div class="invalid-feedback" id="username-feedback"></div>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 animate-form-field">
                         <label class="form-label">Password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            {{ form.password(class="form-control") }}
+                            {{ form.password(class="form-control", id="password") }}
+                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
+                        <div class="invalid-feedback" id="password-feedback"></div>
                     </div>
 
                     <div class="d-grid gap-2">
-                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                        {{ form.submit(class="btn btn-primary btn-lg login-btn", id="login-button") }}
                     </div>
                 </form>
 
-                <div class="text-center mt-4">
+                <div class="text-center mt-4 animate-link">
                     <p>Don't have an account? <a href="{{ url_for('register') }}" class="register-link">Register here</a></p>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Login Page Specific JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate card entrance
+    const loginCard = document.querySelector('.animate-card');
+    gsap.from(loginCard, {
+        duration: 0.8,
+        y: 50,
+        opacity: 0,
+        ease: 'power3.out'
+    });
+    
+    // Animate form fields
+    const formFields = document.querySelectorAll('.animate-form-field');
+    gsap.from(formFields, {
+        duration: 0.5,
+        opacity: 0,
+        y: 20,
+        stagger: 0.15,
+        delay: 0.3,
+        ease: 'power2.out'
+    });
+    
+    // Password visibility toggle
+    const togglePassword = document.querySelector('.toggle-password');
+    if (togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const passwordInput = document.querySelector('#password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    }
+    
+    // Basic form validation
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const usernameFeedback = document.getElementById('username-feedback');
+    const passwordFeedback = document.getElementById('password-feedback');
+    const loginButton = document.getElementById('login-button');
+    
+    if (loginForm) {
+        usernameInput.addEventListener('input', validateUsername);
+        passwordInput.addEventListener('input', validatePassword);
+        
+        loginForm.addEventListener('submit', function(e) {
+            let isValid = true;
+            
+            if (!validateUsername()) {
+                isValid = false;
+            }
+            
+            if (!validatePassword()) {
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                
+                // Shake animation for invalid form
+                gsap.to(loginForm, {
+                    x: [-10, 10, -5, 5, 0],
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
+            } else {
+                // Show loading state
+                loginButton.disabled = true;
+                loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
+            }
+        });
+    }
+    
+    function validateUsername() {
+        if (usernameInput.value.trim() === '') {
+            usernameInput.classList.add('is-invalid');
+            usernameFeedback.textContent = 'Username is required';
+            return false;
+        } else {
+            usernameInput.classList.remove('is-invalid');
+            usernameInput.classList.add('is-valid');
+            return true;
+        }
+    }
+    
+    function validatePassword() {
+        if (passwordInput.value.trim() === '') {
+            passwordInput.classList.add('is-invalid');
+            passwordFeedback.textContent = 'Password is required';
+            return false;
+        } else {
+            passwordInput.classList.remove('is-invalid');
+            passwordInput.classList.add('is-valid');
+            return true;
+        }
+    }
+    
+    // Button hover effect
+    const loginBtn = document.querySelector('.login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('mouseenter', function() {
+            gsap.to(this, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+        
+        loginBtn.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                scale: 1,
+                duration: 0.3,
+                ease: 'power2.out'
+            });
+        });
+    }
+});
+</script>
 {% endblock %}
