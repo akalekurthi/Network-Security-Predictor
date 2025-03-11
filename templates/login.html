@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+  <form class="form" action="{{ url_for('login') }}" method="post" autocomplete="off">
+    {{ form.csrf_token }}
+    <div class="control">
+      <h1>Sign In</h1>
+    </div>
+    <div class="control block-cube block-input">
+      {{ form.username(placeholder="Username") }}
+      <div class="bg-top">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg-right">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg">
+        <div class="bg-inner"></div>
+      </div>
+    </div>
+    
+    <div class="control block-cube block-input">
+      {{ form.password(placeholder="Password") }}
+      <div class="bg-top">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg-right">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg">
+        <div class="bg-inner"></div>
+      </div>
+    </div>
+    
+    <button class="btn block-cube block-cube-hover" type="submit">
+      <div class="bg-top">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg-right">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="bg">
+        <div class="bg-inner"></div>
+      </div>
+      <div class="text">Log In</div>
+    </button>
+    
+    <div class="credits">
+      <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
+    </div>
+  </form>
+</div>
+{% endblock %}
