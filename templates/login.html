@@ -1,310 +1,197 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-6 mx-auto">
-        <div class="card auth-card animate-card">
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <i class="fas fa-shield-alt auth-icon animate-icon"></i>
-                    <h3 class="card-title">Login</h3>
-                </div>
-
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-danger animate-alert">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
-                <form method="POST" class="login-form" id="login-form">
-                    {{ form.hidden_tag() }}
-                    <div class="mb-3 animate-form-field">
-                        <label class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            {{ form.username(class="form-control", id="username") }}
-                        </div>
-                        <div class="invalid-feedback" id="username-feedback"></div>
-                    </div>
-
-                    <div class="mb-3 animate-form-field">
-                        <label class="form-label">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            {{ form.password(class="form-control", id="password") }}
-                            <button class="btn btn-outline-secondary toggle-password" type="button">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="invalid-feedback" id="password-feedback"></div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        {{ form.submit(class="btn btn-primary btn-lg login-btn", id="login-button") }}
-                    </div>
-                </form>
-
-                <div class="text-center mt-4 animate-link">
-                    <p>Don't have an account? <a href="{{ url_for('register') }}" class="register-link">Register here</a></p>
-                </div>
-            </div>
-        </div>
+<div class="login-container">
+  <div class="login-box">
+    <div class="illustration-wrapper">
+      <img src="https://mixkit.imgix.net/art/preview/mixkit-left-handed-man-sitting-at-a-table-writing-in-a-notebook-27-original-large.png" alt="Login illustration">
     </div>
+    <div class="form-container">
+      <h1 class="title">Welcome Back</h1>
+      <p class="subtitle">Please log in to continue</p>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-danger animate-alert">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('login') }}" id="login-form">
+        {{ form.hidden_tag() }}
+        <div class="form-item">
+          <label for="username" class="form-label">Username</label>
+          <div class="input-wrapper">
+            <i class="fa fa-user input-icon"></i>
+            {{ form.username(class="form-input", id="username", placeholder="Enter your username") }}
+          </div>
+          <div class="error-message" id="username-error"></div>
+        </div>
+
+        <div class="form-item">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrapper">
+            <i class="fa fa-lock input-icon"></i>
+            {{ form.password(class="form-input", id="password", placeholder="Enter your password") }}
+            <button type="button" class="toggle-password">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+          <div class="error-message" id="password-error"></div>
+        </div>
+
+        <div class="form-item-other">
+          <div class="checkbox">
+            <input type="checkbox" id="rememberMeCheckbox">
+            <label for="rememberMeCheckbox">Remember me</label>
+          </div>
+          <a href="#" class="forgot-password-link">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="login-button" id="login-button">
+          LOG IN
+        </button>
+      </form>
+
+      <div class="signup-link">
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Login Page Specific JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Animate card entrance
-    const loginCard = document.querySelector('.animate-card');
-    gsap.from(loginCard, {
-        duration: 0.8,
-        y: 50,
-        opacity: 0,
-        ease: 'power3.out'
-    });
+  // Form validation
+  const loginForm = document.getElementById('login-form');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const usernameError = document.getElementById('username-error');
+  const passwordError = document.getElementById('password-error');
+  const loginButton = document.getElementById('login-button');
 
-    // Animate form fields
-    const formFields = document.querySelectorAll('.animate-form-field');
-    gsap.from(formFields, {
+  // Entrance animations
+  gsap.from(".login-box", {
+    duration: 1,
+    y: 50,
+    opacity: 0,
+    ease: "power3.out"
+  });
+
+  gsap.from(".title, .subtitle", {
+    duration: 0.8,
+    y: 20,
+    opacity: 0,
+    stagger: 0.2,
+    delay: 0.5,
+    ease: "power3.out"
+  });
+
+  gsap.from(".form-item", {
+    duration: 0.6,
+    y: 20,
+    opacity: 0,
+    stagger: 0.15,
+    delay: 0.7,
+    ease: "power3.out"
+  });
+
+  // Password toggle
+  const togglePassword = document.querySelector('.toggle-password');
+  togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    const icon = this.querySelector('i');
+    icon.classList.toggle('fa-eye');
+    icon.classList.toggle('fa-eye-slash');
+  });
+
+  // Button hover effect
+  loginButton.addEventListener('mouseenter', function() {
+    gsap.to(this, {
+      scale: 1.05,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  loginButton.addEventListener('mouseleave', function() {
+    gsap.to(this, {
+      scale: 1,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  });
+
+  // Form validation
+  loginForm.addEventListener('submit', function(e) {
+    let isValid = true;
+
+    // Username validation
+    if (usernameInput.value.trim() === '') {
+      usernameError.textContent = 'Username is required';
+      isValid = false;
+
+      gsap.to(usernameInput, {
+        x: [-10, 10, -5, 5, 0],
+        duration: 0.4,
+        ease: "power2.inOut"
+      });
+    } else {
+      usernameError.textContent = '';
+    }
+
+    // Password validation
+    if (passwordInput.value.trim() === '') {
+      passwordError.textContent = 'Password is required';
+      isValid = false;
+
+      gsap.to(passwordInput, {
+        x: [-10, 10, -5, 5, 0],
+        duration: 0.4,
+        ease: "power2.inOut"
+      });
+    } else {
+      passwordError.textContent = '';
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+
+      // Shake form
+      gsap.to(".login-box", {
+        x: [-5, 5, -4, 4, -2, 2, 0],
         duration: 0.5,
-        opacity: 0,
-        y: 20,
-        stagger: 0.15,
-        delay: 0.3,
-        ease: 'power2.out'
+        ease: "power2.inOut"
+      });
+    } else {
+      // Show loading state
+      loginButton.innerHTML = '<span class="spinner"></span> Logging in...';
+      loginButton.disabled = true;
+    }
+  });
+
+  // Input focus animations
+  const inputs = document.querySelectorAll('.form-input');
+  inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+      const wrapper = this.closest('.input-wrapper');
+      gsap.to(wrapper, {
+        boxShadow: "0 0 0 2px rgba(78, 115, 223, 0.5)",
+        duration: 0.3
+      });
     });
 
-    // Password visibility toggle
-    const togglePassword = document.querySelector('.toggle-password');
-    if (togglePassword) {
-        togglePassword.addEventListener('click', function() {
-            const passwordInput = document.querySelector('#password');
-            const icon = this.querySelector('i');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-    }
-
-    // Basic form validation
-    const loginForm = document.getElementById('login-form');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const usernameFeedback = document.getElementById('username-feedback');
-    const passwordFeedback = document.getElementById('password-feedback');
-    const loginButton = document.getElementById('login-button');
-
-    if (loginForm) {
-        usernameInput.addEventListener('input', validateUsername);
-        passwordInput.addEventListener('input', validatePassword);
-
-        loginForm.addEventListener('submit', function(e) {
-            let isValid = true;
-
-            if (!validateUsername()) {
-                isValid = false;
-            }
-
-            if (!validatePassword()) {
-                isValid = false;
-            }
-
-            if (!isValid) {
-                e.preventDefault();
-
-                // Shake animation for invalid form
-                gsap.to(loginForm, {
-                    x: [-10, 10, -5, 5, 0],
-                    duration: 0.5,
-                    ease: 'power2.out'
-                });
-            } else {
-                // Show loading state
-                loginButton.disabled = true;
-                loginButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
-            }
-        });
-    }
-
-    function validateUsername() {
-        if (usernameInput.value.trim() === '') {
-            usernameInput.classList.add('is-invalid');
-            usernameFeedback.textContent = 'Username is required';
-            return false;
-        } else {
-            usernameInput.classList.remove('is-invalid');
-            usernameInput.classList.add('is-valid');
-            return true;
-        }
-    }
-
-    function validatePassword() {
-        if (passwordInput.value.trim() === '') {
-            passwordInput.classList.add('is-invalid');
-            passwordFeedback.textContent = 'Password is required';
-            return false;
-        } else {
-            passwordInput.classList.remove('is-invalid');
-            passwordInput.classList.add('is-valid');
-            return true;
-        }
-    }
-
-    // Button hover effect
-    const loginBtn = document.querySelector('.login-btn');
-    if (loginBtn) {
-        loginBtn.addEventListener('mouseenter', function() {
-            gsap.to(this, {
-                scale: 1.05,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-
-        loginBtn.addEventListener('mouseleave', function() {
-            gsap.to(this, {
-                scale: 1,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-    }
-
-    // Add a typing effect to the "Don't have an account?" text
-    const registerText = document.querySelector('.animate-link p');
-    const originalText = registerText.innerHTML;
-    registerText.innerHTML = '';
-    let i = 0;
-
-    function typeWriter() {
-        if (i < originalText.length) {
-            registerText.innerHTML += originalText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 30);
-        }
-    }
-
-    // Delay the typing animation
-    setTimeout(typeWriter, 1500);
+    input.addEventListener('blur', function() {
+      const wrapper = this.closest('.input-wrapper');
+      gsap.to(wrapper, {
+        boxShadow: "none",
+        duration: 0.3
+      });
+    });
+  });
 });
-
-    // Add a particles.js background animation
-    particlesJS('particles-js', {
-        "particles": {
-            "number": {
-                "value": 80,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#4e73df"
-            },
-            "shape": {
-                "type": "circle",
-                "stroke": {
-                    "width": 0,
-                    "color": "#000000"
-                },
-                "polygon": {
-                    "nb_sides": 5
-                }
-            },
-            "opacity": {
-                "value": 0.5,
-                "random": false,
-                "anim": {
-                    "enable": false,
-                    "speed": 1,
-                    "opacity_min": 0.1,
-                    "sync": false
-                }
-            },
-            "size": {
-                "value": 3,
-                "random": true,
-                "anim": {
-                    "enable": false,
-                    "speed": 40,
-                    "size_min": 0.1,
-                    "sync": false
-                }
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#4e73df",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 3,
-                "direction": "none",
-                "random": false,
-                "straight": false,
-                "out_mode": "out",
-                "bounce": false,
-                "attract": {
-                    "enable": false,
-                    "rotateX": 600,
-                    "rotateY": 1200
-                }
-            }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "grab"
-                },
-                "onclick": {
-                    "enable": true,
-                    "mode": "push"
-                },
-                "resize": true
-            },
-            "modes": {
-                "grab": {
-                    "distance": 140,
-                    "line_linked": {
-                        "opacity": 1
-                    }
-                },
-                "bubble": {
-                    "distance": 400,
-                    "size": 40,
-                    "duration": 2,
-                    "opacity": 8,
-                    "speed": 3
-                },
-                "repulse": {
-                    "distance": 200,
-                    "duration": 0.4
-                },
-                "push": {
-                    "particles_nb": 4
-                },
-                "remove": {
-                    "particles_nb": 2
-                }
-            }
-        },
-        "retina_detect": true
-    });
 </script>
-<!-- Particles.js for background animation -->
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 {% endblock %}

@@ -4,7 +4,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_wtf.csrf import CSRFProtect
 import joblib
 import logging
-import numpy as np # Added numpy import
+import numpy as np
 from utils import preprocess_input, validate_input, get_performance_metrics
 from models import db, User
 from forms import RegistrationForm, LoginForm
@@ -89,7 +89,7 @@ def login():
             # Simulate a slight delay to show loading animation
             import time
             time.sleep(0.5)
-            
+
             user = User.query.filter_by(username=form.username.data).first()
             if user and user.check_password(form.password.data):
                 login_user(user)
@@ -102,7 +102,8 @@ def login():
             logger.error(f"Login error: {str(e)}")
             flash('An error occurred during login')
 
-    return render_template('login.html', form=form, page_id="login")
+    return render_template('login.html', form=form, page_id="login") #Consider replacing 'login.html' with the CodePen template
+
 
 @app.route('/logout')
 @login_required
