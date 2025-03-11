@@ -3,12 +3,22 @@
 
 {% block content %}
 <div class="login-container">
-  <form class="form" autocomplete="off">
+  <form class="form" method="POST" autocomplete="off">
+    {{ form.hidden_tag() }}
     <div class="control">
       <h1>Sign In</h1>
     </div>
+    
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
     <div class="control block-cube block-input">
-      <input name="username" type="text" placeholder="Username" />
+      {{ form.username(placeholder="Username") }}
       <div class="bg-top">
         <div class="bg-inner"></div>
       </div>
@@ -21,7 +31,7 @@
     </div>
     
     <div class="control block-cube block-input">
-      <input name="password" type="password" placeholder="Password" />
+      {{ form.password(placeholder="Password") }}
       <div class="bg-top">
         <div class="bg-inner"></div>
       </div>
@@ -33,7 +43,7 @@
       </div>
     </div>
     
-    <button class="btn block-cube block-cube-hover" type="button">
+    <button class="btn block-cube block-cube-hover" type="submit">
       <div class="bg-top">
         <div class="bg-inner"></div>
       </div>
