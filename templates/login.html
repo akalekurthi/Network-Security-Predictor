@@ -1,197 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="login-container">
-  <div class="login-box">
-    <div class="illustration-wrapper">
-      <img src="https://mixkit.imgix.net/art/preview/mixkit-left-handed-man-sitting-at-a-table-writing-in-a-notebook-27-original-large.png" alt="Login illustration">
-    </div>
-    <div class="form-container">
-      <h1 class="title">Welcome Back</h1>
-      <p class="subtitle">Please log in to continue</p>
-
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-danger animate-alert">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <form method="POST" action="{{ url_for('login') }}" id="login-form">
-        {{ form.hidden_tag() }}
-        <div class="form-item">
-          <label for="username" class="form-label">Username</label>
-          <div class="input-wrapper">
-            <i class="fa fa-user input-icon"></i>
-            {{ form.username(class="form-input", id="username", placeholder="Enter your username") }}
-          </div>
-          <div class="error-message" id="username-error"></div>
-        </div>
-
-        <div class="form-item">
-          <label for="password" class="form-label">Password</label>
-          <div class="input-wrapper">
-            <i class="fa fa-lock input-icon"></i>
-            {{ form.password(class="form-input", id="password", placeholder="Enter your password") }}
-            <button type="button" class="toggle-password">
-              <i class="fa fa-eye"></i>
-            </button>
-          </div>
-          <div class="error-message" id="password-error"></div>
-        </div>
-
-        <div class="form-item-other">
-          <div class="checkbox">
-            <input type="checkbox" id="rememberMeCheckbox">
-            <label for="rememberMeCheckbox">Remember me</label>
-          </div>
-          <a href="#" class="forgot-password-link">Forgot password?</a>
-        </div>
-
-        <button type="submit" class="login-button" id="login-button">
-          LOG IN
-        </button>
-      </form>
-
-      <div class="signup-link">
-        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up</a></p>
-      </div>
-    </div>
+<div class="login-page">
+  <div class="form">
+    <form class="register-form">
+      <input type="text" placeholder="name"/>
+      <input type="password" placeholder="password"/>
+      <input type="text" placeholder="email address"/>
+      <button>create</button>
+      <p class="message">Already registered? <a href="#">Sign In</a></p>
+    </form>
+    <form class="login-form" method="POST" action="{{ url_for('login') }}">
+      {{ form.hidden_tag() }}
+      <input type="text" name="username" placeholder="username"/>
+      <input type="password" name="password" placeholder="password"/>
+      <button>login</button>
+      <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
+    </form>
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Form validation
-  const loginForm = document.getElementById('login-form');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const usernameError = document.getElementById('username-error');
-  const passwordError = document.getElementById('password-error');
-  const loginButton = document.getElementById('login-button');
-
-  // Entrance animations
-  gsap.from(".login-box", {
-    duration: 1,
-    y: 50,
-    opacity: 0,
-    ease: "power3.out"
+  $('.message a').click(function(){
+    $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
   });
-
-  gsap.from(".title, .subtitle", {
-    duration: 0.8,
-    y: 20,
-    opacity: 0,
-    stagger: 0.2,
-    delay: 0.5,
-    ease: "power3.out"
-  });
-
-  gsap.from(".form-item", {
-    duration: 0.6,
-    y: 20,
-    opacity: 0,
-    stagger: 0.15,
-    delay: 0.7,
-    ease: "power3.out"
-  });
-
-  // Password toggle
-  const togglePassword = document.querySelector('.toggle-password');
-  togglePassword.addEventListener('click', function() {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-
-    const icon = this.querySelector('i');
-    icon.classList.toggle('fa-eye');
-    icon.classList.toggle('fa-eye-slash');
-  });
-
-  // Button hover effect
-  loginButton.addEventListener('mouseenter', function() {
-    gsap.to(this, {
-      scale: 1.05,
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  });
-
-  loginButton.addEventListener('mouseleave', function() {
-    gsap.to(this, {
-      scale: 1,
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  });
-
-  // Form validation
-  loginForm.addEventListener('submit', function(e) {
-    let isValid = true;
-
-    // Username validation
-    if (usernameInput.value.trim() === '') {
-      usernameError.textContent = 'Username is required';
-      isValid = false;
-
-      gsap.to(usernameInput, {
-        x: [-10, 10, -5, 5, 0],
-        duration: 0.4,
-        ease: "power2.inOut"
-      });
-    } else {
-      usernameError.textContent = '';
-    }
-
-    // Password validation
-    if (passwordInput.value.trim() === '') {
-      passwordError.textContent = 'Password is required';
-      isValid = false;
-
-      gsap.to(passwordInput, {
-        x: [-10, 10, -5, 5, 0],
-        duration: 0.4,
-        ease: "power2.inOut"
-      });
-    } else {
-      passwordError.textContent = '';
-    }
-
-    if (!isValid) {
-      e.preventDefault();
-
-      // Shake form
-      gsap.to(".login-box", {
-        x: [-5, 5, -4, 4, -2, 2, 0],
-        duration: 0.5,
-        ease: "power2.inOut"
-      });
-    } else {
-      // Show loading state
-      loginButton.innerHTML = '<span class="spinner"></span> Logging in...';
-      loginButton.disabled = true;
-    }
-  });
-
-  // Input focus animations
-  const inputs = document.querySelectorAll('.form-input');
-  inputs.forEach(input => {
-    input.addEventListener('focus', function() {
-      const wrapper = this.closest('.input-wrapper');
-      gsap.to(wrapper, {
-        boxShadow: "0 0 0 2px rgba(78, 115, 223, 0.5)",
-        duration: 0.3
-      });
-    });
-
-    input.addEventListener('blur', function() {
-      const wrapper = this.closest('.input-wrapper');
-      gsap.to(wrapper, {
-        boxShadow: "none",
-        duration: 0.3
-      });
-    });
-  });
-});
 </script>
 {% endblock %}
