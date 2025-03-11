@@ -1,14 +1,12 @@
-
 {% extends "base.html" %}
 
 {% block content %}
-<div class="login-container">
-  <form class="form" method="POST" autocomplete="off">
-    {{ form.hidden_tag() }}
-    <div class="control">
+<div class="auth-container login-container">
+  <div class="auth-form login-form">
+    <div class="auth-header">
       <h1>Sign In</h1>
     </div>
-    
+
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for message in messages %}
@@ -16,49 +14,24 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
-    
-    <div class="control block-cube block-input">
-      {{ form.username(placeholder="Username") }}
-      <div class="bg-top">
-        <div class="bg-inner"></div>
+
+    <form method="POST" autocomplete="off">
+      {{ form.hidden_tag() }}
+
+      <div class="form-field">
+        {{ form.username(class="form-input", placeholder="Username") }}
       </div>
-      <div class="bg-right">
-        <div class="bg-inner"></div>
+
+      <div class="form-field">
+        {{ form.password(class="form-input", placeholder="Password") }}
       </div>
-      <div class="bg">
-        <div class="bg-inner"></div>
+
+      <button type="submit" class="login-btn">LOG IN</button>
+
+      <div class="login-footer">
+        <p>Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
       </div>
-    </div>
-    
-    <div class="control block-cube block-input">
-      {{ form.password(placeholder="Password") }}
-      <div class="bg-top">
-        <div class="bg-inner"></div>
-      </div>
-      <div class="bg-right">
-        <div class="bg-inner"></div>
-      </div>
-      <div class="bg">
-        <div class="bg-inner"></div>
-      </div>
-    </div>
-    
-    <button class="btn block-cube block-cube-hover" type="submit">
-      <div class="bg-top">
-        <div class="bg-inner"></div>
-      </div>
-      <div class="bg-right">
-        <div class="bg-inner"></div>
-      </div>
-      <div class="bg">
-        <div class="bg-inner"></div>
-      </div>
-      <div class="text">Log In</div>
-    </button>
-    
-    <div class="credits">
-      <p class="message">Not registered? <a href="{{ url_for('register') }}">Create an account</a></p>
-    </div>
-  </form>
+    </form>
+  </div>
 </div>
 {% endblock %}
