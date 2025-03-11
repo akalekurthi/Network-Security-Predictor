@@ -31,7 +31,7 @@
                 <!-- Classification Metrics -->
                 <div class="row mt-4">
                     <div class="col-md-6">
-                        <div class="card">
+                        <div class="card mb-4">
                             <div class="card-body">
                                 <h5 class="card-title">Attack Distribution</h5>
                                 <canvas id="attackDistribution"></canvas>
@@ -43,6 +43,45 @@
                             <div class="card-body">
                                 <h5 class="card-title">Confidence Scores</h5>
                                 <canvas id="confidenceScores"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics Section -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4 class="text-center mb-3">Model Performance Metrics</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Accuracy Score</h5>
+                                <canvas id="accuracyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">F1 Score</h5>
+                                <canvas id="f1Chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Precision Score</h5>
+                                <canvas id="precisionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Recall Score</h5>
+                                <canvas id="recallChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -144,6 +183,110 @@ document.addEventListener('DOMContentLoaded', function() {
             }]
         },
         options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0
+                }
+            }
+        }
+    });
+    
+    // Performance Metrics Charts
+    const performanceMetrics = {{ performance_metrics|tojson }};
+    
+    // Accuracy Chart
+    new Chart(document.getElementById('accuracyChart'), {
+        type: 'bar',
+        data: {
+            labels: performanceMetrics.classifiers,
+            datasets: [{
+                label: 'Accuracy Score',
+                data: performanceMetrics.accuracy,
+                backgroundColor: '#4e73df',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0
+                }
+            }
+        }
+    });
+    
+    // F1 Score Chart
+    new Chart(document.getElementById('f1Chart'), {
+        type: 'bar',
+        data: {
+            labels: performanceMetrics.classifiers,
+            datasets: [{
+                label: 'F1 Score',
+                data: performanceMetrics.f1_score,
+                backgroundColor: '#e83e8c',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0
+                }
+            }
+        }
+    });
+    
+    // Precision Chart
+    new Chart(document.getElementById('precisionChart'), {
+        type: 'bar',
+        data: {
+            labels: performanceMetrics.classifiers,
+            datasets: [{
+                label: 'Precision Score',
+                data: performanceMetrics.precision,
+                backgroundColor: '#fd7e14',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0
+                }
+            }
+        }
+    });
+    
+    // Recall Chart
+    new Chart(document.getElementById('recallChart'), {
+        type: 'bar',
+        data: {
+            labels: performanceMetrics.classifiers,
+            datasets: [{
+                label: 'Recall Score',
+                data: performanceMetrics.recall,
+                backgroundColor: '#20c9a6',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0
+                }
+            }
+        }
+    });s: {
             responsive: true,
             scales: {
                 y: {

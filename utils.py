@@ -18,6 +18,30 @@ def validate_input(values):
         return False
 
 def preprocess_input(values):
+
+
+def get_performance_metrics():
+    """
+    Generate performance metrics for model evaluation visualization
+    This returns sample data for demonstration purposes
+    In a production environment, these would be calculated from actual test results
+    """
+    # Sample data for demonstration
+    metrics = {
+        "classifiers": [
+            "Random Forest", 
+            "Gradient Boosting", 
+            "Decision Tree",
+            "Support Vector Machine",
+            "Neural Network"
+        ],
+        "accuracy": [0.92, 0.89, 0.82, 0.85, 0.90],
+        "f1_score": [0.91, 0.88, 0.80, 0.84, 0.89],
+        "precision": [0.93, 0.90, 0.83, 0.87, 0.92],
+        "recall": [0.90, 0.86, 0.78, 0.83, 0.88]
+    }
+    return metrics
+
     """Preprocess input values before prediction"""
     try:
         # Convert to numpy array and reshape for prediction

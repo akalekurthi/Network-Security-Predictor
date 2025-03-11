@@ -167,12 +167,17 @@ def predict():
 
         result = attack_types.get(prediction[0], 'Unknown Attack Type')
         confidence = float(max(probabilities))
+        
+        # Get performance metrics for visualization
+        from utils import get_performance_metrics
+        performance_metrics = get_performance_metrics()
 
         return render_template('prediction.html', 
                              prediction=result,
                              confidence=confidence,
                              probabilities=probabilities,
-                             input_data=input_values)
+                             input_data=input_values,
+                             performance_metrics=performance_metrics)
 
     except Exception as e:
         logger.error(f"Unexpected error in prediction: {str(e)}")
