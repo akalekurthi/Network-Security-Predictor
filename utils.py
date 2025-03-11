@@ -34,11 +34,11 @@ def get_performance_metrics():
     """
     Return performance metrics for visualization.
     """
-    # Example metrics - in a real application, these would be calculated based on model evaluation
+    # Example metrics for multiple classifiers
     return {
-        'accuracy': [0.95],
-        'precision': [0.94],
-        'recall': [0.92],
-        'f1_score': [0.93],
-        'classifiers': ['Random Forest']  # Add the classifier name for chart labels
+        'accuracy': [0.95, 0.92, 0.94, 0.96],
+        'precision': [0.94, 0.90, 0.93, 0.95],
+        'recall': [0.92, 0.89, 0.91, 0.94],
+        'f1_score': [0.93, 0.89, 0.92, 0.94],
+        'classifiers': ['Random Forest', 'Naive Bayes', 'SVM', 'Voting Classifier']
     }

@@ -4,7 +4,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_wtf.csrf import CSRFProtect
 import joblib
 import logging
-from utils import preprocess_input, validate_input
+import numpy as np # Added numpy import
+from utils import preprocess_input, validate_input, get_performance_metrics
 from models import db, User
 from forms import RegistrationForm, LoginForm
 
@@ -167,9 +168,8 @@ def predict():
 
         result = attack_types.get(prediction[0], 'Unknown Attack Type')
         confidence = float(max(probabilities))
-        
+
         # Get performance metrics for visualization
-        from utils import get_performance_metrics
         performance_metrics = get_performance_metrics()
 
         return render_template('prediction.html', 
