@@ -87,6 +87,72 @@
                     </div>
                 </div>
 
+                <div class="security-recommendations mt-4">
+                    <h4 class="text-center mb-3">Security Recommendations</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="recommendation-icon text-center mb-3">
+                                <i class="fas fa-shield-alt text-primary fa-2x"></i>
+                            </div>
+                            
+                            {% if prediction == 'DDoS Attack' %}
+                            <h5>DDoS Attack Protection</h5>
+                            <ul class="recommendation-list">
+                                <li>Implement rate limiting for network requests</li>
+                                <li>Deploy a Web Application Firewall (WAF)</li>
+                                <li>Enable DDoS protection services from your ISP</li>
+                                <li>Use traffic analysis tools to detect and block abnormal traffic patterns</li>
+                                <li>Consider deploying your application behind a Content Delivery Network (CDN)</li>
+                            </ul>
+                            
+                            {% elif prediction == 'Probe Attack' %}
+                            <h5>Probe Attack Protection</h5>
+                            <ul class="recommendation-list">
+                                <li>Disable unnecessary network services and ports</li>
+                                <li>Implement strict firewall rules to block port scanning</li>
+                                <li>Use Intrusion Prevention Systems (IPS) to detect reconnaissance activities</li>
+                                <li>Regularly scan your network for vulnerabilities</li>
+                                <li>Hide network topology information from public access</li>
+                            </ul>
+                            
+                            {% elif prediction == 'R2L Attack' %}
+                            <h5>Remote to Local (R2L) Attack Protection</h5>
+                            <ul class="recommendation-list">
+                                <li>Implement strong password policies and multi-factor authentication</li>
+                                <li>Keep all systems and applications updated with security patches</li>
+                                <li>Use privilege separation and least privilege principles</li>
+                                <li>Monitor for unauthorized login attempts</li>
+                                <li>Implement network segmentation to limit lateral movement</li>
+                            </ul>
+                            
+                            {% elif prediction == 'U2R Attack' %}
+                            <h5>User to Root (U2R) Attack Protection</h5>
+                            <ul class="recommendation-list">
+                                <li>Apply the principle of least privilege for all user accounts</li>
+                                <li>Regularly audit user permissions and access controls</li>
+                                <li>Keep systems patched against known privilege escalation vulnerabilities</li>
+                                <li>Implement application whitelisting to prevent unauthorized execution</li>
+                                <li>Use security tools that can detect unusual privilege escalation attempts</li>
+                            </ul>
+                            
+                            {% else %}
+                            <h5>General Security Recommendations</h5>
+                            <ul class="recommendation-list">
+                                <li>Keep all systems and applications updated with security patches</li>
+                                <li>Implement a strong firewall configuration</li>
+                                <li>Use Intrusion Detection and Prevention Systems</li>
+                                <li>Conduct regular security audits and vulnerability assessments</li>
+                                <li>Train staff on security awareness and best practices</li>
+                            </ul>
+                            {% endif %}
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle"></i> These recommendations should be adapted to your specific network environment and security policies.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="additional-info mt-4">
                     <h5>Input Features:</h5>
                     <pre class="code-block">{{ input_data }}</pre>

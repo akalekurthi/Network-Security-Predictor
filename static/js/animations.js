@@ -33,6 +33,24 @@ if(document.querySelector('.result-animation')) {
         delay: 0.5,
         ease: 'power2.inOut'
     });
+    
+    // Recommendations animation
+    gsap.from('.security-recommendations .card', {
+        duration: 0.8,
+        y: 50,
+        opacity: 0,
+        delay: 0.7,
+        ease: 'power2.out'
+    });
+    
+    gsap.from('.recommendation-list li', {
+        duration: 0.5,
+        x: -20,
+        opacity: 0,
+        stagger: 0.1,
+        delay: 1,
+        ease: 'power2.out'
+    });
 }
 
 // Error page animation
