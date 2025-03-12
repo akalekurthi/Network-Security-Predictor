@@ -9,8 +9,10 @@
 
                 <form id="detection-form" action="{{ url_for('predict') }}" method="post">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    
+                    <!-- Basic Features Section -->
+                    <h4 class="section-title mt-3 mb-3">Basic Features</h4>
                     <div class="row g-3">
-                        <!-- Basic Features -->
                         <div class="col-md-4">
                             <label class="form-label">Protocol Type</label>
                             <input type="number" class="form-control" name="input_1" required 
@@ -28,90 +30,108 @@
                             <input type="number" class="form-control" name="input_3" required
                                    placeholder="Connection flag (1-11)" min="1" max="11">
                         </div>
-
-                        <div class="col-md-4">
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
                             <label class="form-label">Source Bytes</label>
                             <input type="number" class="form-control" name="input_4" required min="0"
                                    placeholder="Bytes sent from source">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Destination Bytes</label>
                             <input type="number" class="form-control" name="input_5" required min="0"
                                    placeholder="Bytes sent to destination">
                         </div>
+                    </div>
 
-                        <!-- Connection Features -->
-                        <div class="col-md-4">
+                    <!-- Connection Features Section -->
+                    <h4 class="section-title mt-4 mb-3">Connection Features</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label class="form-label">Count</label>
                             <input type="number" class="form-control" name="input_6" required min="0"
                                    placeholder="Connection count">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Srv Count</label>
                             <input type="number" class="form-control" name="input_7" required min="0"
                                    placeholder="Service count">
                         </div>
+                    </div>
 
-                        <!-- Error Rate Features -->
-                        <div class="col-md-4">
+                    <!-- Error Rate Features Section -->
+                    <h4 class="section-title mt-4 mb-3">Error Rate Features</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label class="form-label">Serror Rate</label>
                             <input type="number" class="form-control" name="input_8" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="SYN error rate (0-1)">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Srv Serror Rate</label>
                             <input type="number" class="form-control" name="input_9" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Service SYN error rate (0-1)">
                         </div>
+                    </div>
 
-                        <!-- Service Features -->
-                        <div class="col-md-4">
+                    <!-- Service Features Section -->
+                    <h4 class="section-title mt-4 mb-3">Service Features</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label class="form-label">Same Srv Rate</label>
                             <input type="number" class="form-control" name="input_10" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Same service rate (0-1)">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Diff Srv Rate</label>
                             <input type="number" class="form-control" name="input_11" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Different service rate (0-1)">
                         </div>
+                    </div>
 
-                        <!-- Host-based Features -->
-                        <div class="col-md-4">
+                    <!-- Host-based Features Section -->
+                    <h4 class="section-title mt-4 mb-3">Host-based Features</h4>
+                    <div class="row g-3">
+                        <div class="col-md-6">
                             <label class="form-label">Dst Host Srv Count</label>
                             <input type="number" class="form-control" name="input_12" required min="0"
                                    placeholder="Destination host service count">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Dst Host Same Srv Rate</label>
                             <input type="number" class="form-control" name="input_13" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Dst host same service rate (0-1)">
                         </div>
-
-                        <div class="col-md-4">
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
                             <label class="form-label">Dst Host Diff Srv Rate</label>
                             <input type="number" class="form-control" name="input_14" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Dst host diff service rate (0-1)">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Dst Host Same Src Port Rate</label>
                             <input type="number" class="form-control" name="input_15" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Dst host same port rate (0-1)">
                         </div>
-
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
                         <div class="col-md-4">
                             <label class="form-label">Dst Host Srv Diff Host Rate</label>
                             <input type="number" class="form-control" name="input_16" required 
@@ -132,13 +152,16 @@
                                    step="0.01" min="0" max="1"
                                    placeholder="Dst host service error rate (0-1)">
                         </div>
-
-                        <div class="col-md-4">
+                    </div>
+                    
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6 mx-auto">
                             <label class="form-label">Dst Host Rerror Rate</label>
                             <input type="number" class="form-control" name="input_19" required 
                                    step="0.01" min="0" max="1"
                                    placeholder="Dst host reject error rate (0-1)">
                         </div>
+                    </div>
 
                         <div class="col-12 text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg" id="analyze-btn">
