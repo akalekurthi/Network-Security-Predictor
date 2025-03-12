@@ -17,6 +17,39 @@ body {
     letter-spacing: 0.05em;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    color: #eeeeee;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 /* Auth container styles */
@@ -65,6 +98,50 @@ h1 {
     font-size: 16px;
     outline: none;
     border-bottom: 3px solid #333;
+}
+
+/* Dark theme styles for login and register */
+[data-theme="dark"] .login-container,
+[data-theme="dark"] .register-container {
+    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+[data-theme="dark"] .login-form,
+[data-theme="dark"] .register-form {
+    background-color: #222831;
+    color: #eeeeee;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .form-input {
+    background-color: #393e46;
+    color: #eeeeee;
+    border-bottom: 3px solid #00adb5;
+}
+
+[data-theme="dark"] .login-btn {
+    background-color: #00adb5;
+    color: #eeeeee;
+}
+
+[data-theme="dark"] .login-btn:hover {
+    background-color: #00fff5;
+    color: #222831;
+}
+
+[data-theme="dark"] .login-footer a,
+[data-theme="dark"] .login-footer p {
+    color: #eeeeee;
+}
+
+[data-theme="dark"] .login-footer a {
+    color: #00adb5;
+}
+
+[data-theme="dark"] .alert {
+    background-color: #393e46;
+    color: #ff5722;
+    border-color: #ff5722;
 }
 
 .auth-header {
