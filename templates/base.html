@@ -17,60 +17,6 @@
     <!-- GSAP Animation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
-    <style>
-        body[data-theme="dark"] {
-            background-color: #333;
-            color: #fff;
-        }
-        body[data-theme="dark"] .navbar {
-            background-color: #222;
-        }
-        body[data-theme="dark"] .navbar a {
-            color: #fff;
-        }
-        .theme-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: transparent;
-            border: none;
-            color: white;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-
-    </style>
-    <script>
-        const toggleButton = document.querySelector('.theme-toggle');
-        const body = document.body;
-
-        toggleButton.addEventListener('click', () => {
-            const currentTheme = body.dataset.theme;
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            body.dataset.theme = newTheme;
-            localStorage.setItem('theme', newTheme); //Store theme for next visit
-            if (newTheme == 'dark'){
-                toggleButton.title = 'Toggle light mode';
-                toggleButton.innerHTML = '<i class="fas fa-sun"></i>'
-            } else {
-                toggleButton.title = 'Toggle dark mode';
-                toggleButton.innerHTML = '<i class="fas fa-moon"></i>'
-            }
-        });
-
-        // Load theme from local storage
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            body.dataset.theme = savedTheme;
-            if (savedTheme == 'dark'){
-                toggleButton.title = 'Toggle light mode';
-                toggleButton.innerHTML = '<i class="fas fa-sun"></i>'
-            } else {
-                toggleButton.title = 'Toggle dark mode';
-                toggleButton.innerHTML = '<i class="fas fa-moon"></i>'
-            }
-        }
-    </script>
 
 </head>
 <body data-theme="light">
@@ -138,6 +84,9 @@
     {% block scripts %}{% endblock %}
 
     <!-- jQuery for login page animation -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

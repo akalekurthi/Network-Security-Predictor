@@ -22,36 +22,40 @@ document.getElementById('detection-form')?.addEventListener('submit', (e) => {
     spinner.classList.remove('d-none');
 });
 
-// Initialize theme from localStorage
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-});
-// Theme Toggle
+// Theme Toggle - Single unified implementation
 document.addEventListener('DOMContentLoaded', function() {
+    // Create theme toggle button if it doesn't exist
+    let themeToggle = document.querySelector('.theme-toggle');
+    if (!themeToggle) {
+        themeToggle = document.createElement('button');
+        themeToggle.className = 'theme-toggle';
+        themeToggle.title = 'Toggle dark/light mode';
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        document.body.appendChild(themeToggle);
+    }
+    
     // Check for saved theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
     
     // Update the icon based on current theme
-    const themeToggleIcon = document.querySelector('.theme-toggle i');
+    const themeToggleIcon = themeToggle.querySelector('i');
     if (themeToggleIcon) {
         themeToggleIcon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
     }
     
     // Theme toggle functionality
-    const themeToggle = document.querySelector('.theme-toggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', function() {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            document.body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            
-            // Update icon
-            const icon = document.querySelector('.theme-toggle i');
+    themeToggle.addEventListener('click', function() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update icon
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
             icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-        });
-    }
+        }
+    });
 });
