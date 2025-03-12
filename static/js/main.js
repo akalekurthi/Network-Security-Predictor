@@ -1,15 +1,44 @@
-// Theme Toggle
-document.querySelector('.theme-toggle').addEventListener('click', () => {
-    const body = document.body;
-    const currentTheme = body.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    
-    // Update icon
-    const icon = document.querySelector('.theme-toggle i');
-    icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+// Animation for cards and elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Init any animations or UI elements
+    const cards = document.querySelectorAll('.card');
+
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px)';
+            card.style.boxShadow = '0 6px 12px rgba(0,0,0,0.15)';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
+        });
+    });
+
+    // Form validation
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+
+    // Login page animation
+    if (document.querySelector('.login-container')) {
+        const formContainer = document.querySelector('.auth-form');
+        formContainer.style.opacity = '0';
+        formContainer.style.transform = 'translateY(20px)';
+
+        setTimeout(() => {
+            formContainer.style.opacity = '1';
+            formContainer.style.transform = 'translateY(0)';
+            formContainer.style.transition = 'all 0.5s ease';
+        }, 200);
+    }
 });
 
 // Form Submission
@@ -20,42 +49,4 @@ document.getElementById('detection-form')?.addEventListener('submit', (e) => {
     // Show loading state
     button.disabled = true;
     spinner.classList.remove('d-none');
-});
-
-// Theme Toggle - Single unified implementation
-document.addEventListener('DOMContentLoaded', function() {
-    // Create theme toggle button if it doesn't exist
-    let themeToggle = document.querySelector('.theme-toggle');
-    if (!themeToggle) {
-        themeToggle = document.createElement('button');
-        themeToggle.className = 'theme-toggle';
-        themeToggle.title = 'Toggle dark/light mode';
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-        document.body.appendChild(themeToggle);
-    }
-    
-    // Check for saved theme
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    
-    // Update the icon based on current theme
-    const themeToggleIcon = themeToggle.querySelector('i');
-    if (themeToggleIcon) {
-        themeToggleIcon.className = savedTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-    }
-    
-    // Theme toggle functionality
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = document.body.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        document.body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        // Update icon
-        const icon = themeToggle.querySelector('i');
-        if (icon) {
-            icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
-        }
-    });
 });
