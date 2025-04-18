@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 # Ensure secret key is set
-app.secret_key = os.environ.get('SESSION_SECRET')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.secret_key = os.environ.get('SESSION_SECRET', 'dev')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///network_security.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_pre_ping': True,
